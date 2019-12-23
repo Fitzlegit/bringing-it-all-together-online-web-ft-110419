@@ -20,12 +20,31 @@ class Dog
     DB[:conn].execute(sql)
   end
 
+
+
   def self.drop_table
     sql = <<-SQL
       DROP TABLE IF EXISTS dogs
     SQL
 
     DB[:conn].execute(sql)
+  end
+
+  def self.create(name:, breed:)
+    dog = Dog.new(name, breed)
+    dog.save
+    dog
+  end
+
+  def self.find_or_create_by(name:, breed:)
+    dog = DB[:conn].execute("SELECT * FROM dogs WHERE name = ? AND breed = ?", name, breed)
+    if !dog.empty?
+      dog_info = dog[0]
+      dog = Dog.new(dog_info[0], dog_info[1], dog_info[2])
+    else
+      dog = self.create(name: name, breed: breed)
+    end
+    dog
   end
 
   def self.new_from_db(row)
