@@ -22,12 +22,12 @@ class Dog
 
   def self.drop_table
     sql = <<-SQL
-      DROP TABLE IF NOT EXISTS dogs
+      DROP TABLE IF EXISTS dogs
     SQL
 
     DB[:conn].execute(sql)
   end
-  
+
 
 
 end
